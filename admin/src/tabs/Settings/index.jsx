@@ -6,18 +6,17 @@ import { useIntl } from 'react-intl';
 import {
   Button,
   Typography,
-  ToggleInput,
+  Toggle,
   Grid,
-  GridItem,
   TextInput,
   SingleSelect,
   SingleSelectOption,
-  useTheme,
 } from '@strapi/design-system';
 
 import { onChangeSettings } from '../../state/actions/Sitemap';
 import HostnameModal from '../../components/HostnameModal';
 import { DEFAULT_LANGUAGE_URL_TYPE_DEFAULT_LOCALE, DEFAULT_LANGUAGE_URL_TYPE_OTHER } from '../../config/constants';
+import { useTheme } from 'styled-components'
 
 const Settings = () => {
   const { formatMessage } = useIntl();
@@ -41,8 +40,8 @@ const Settings = () => {
   };
 
   return (
-    <Grid gap={4}>
-      <GridItem col={6} s={12}>
+    <Grid.Root gap={4}>
+      <Grid.Item col={6} s={12}>
         <TextInput
           placeholder="https://www.strapi.io"
           label={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Label', defaultMessage: 'Hostname' })}
@@ -51,9 +50,9 @@ const Settings = () => {
           hint={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Description', defaultMessage: 'The URL of your website' })}
           onChange={(e) => dispatch(onChangeSettings('hostname', e.target.value))}
         />
-      </GridItem>
+      </Grid.Item>
       {languages.length > 1 && (
-        <GridItem col={12} s={12}>
+        <Grid.Item col={12} s={12}>
           <Typography variant="pi" fontWeight="bold">
             {formatMessage({ id: 'sitemap.Settings.Field.HostnameOverrides.Label', defaultMessage: 'Hostname overrides' })}
           </Typography>
@@ -74,10 +73,10 @@ const Settings = () => {
             onSave={saveHostnameOverrides}
             onCancel={() => setOpen(false)}
           />
-        </GridItem>
+        </Grid.Item>
       )}
-      <GridItem col={12} s={12}>
-        <ToggleInput
+      <Grid.Item col={12} s={12}>
+        <Toggle
           hint={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description', defaultMessage: 'Include a \'/\' entry when none is present.' })}
           label={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label', defaultMessage: 'Include home page' })}
           name="includeHomepage"
@@ -86,9 +85,9 @@ const Settings = () => {
           checked={settings.get('includeHomepage')}
           onChange={(e) => dispatch(onChangeSettings('includeHomepage', e.target.checked))}
         />
-      </GridItem>
-      <GridItem col={12} s={12}>
-        <ToggleInput
+      </Grid.Item>
+      <Grid.Item col={12} s={12}>
+        <Toggle
           hint={formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Description', defaultMessage: 'Remove all draft entries from the sitemap.' })}
           label={formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Label', defaultMessage: 'Exclude drafts' })}
           name="excludeDrafts"
@@ -97,8 +96,8 @@ const Settings = () => {
           checked={settings.get('excludeDrafts')}
           onChange={(e) => dispatch(onChangeSettings('excludeDrafts', e.target.checked))}
         />
-      </GridItem>
-      <GridItem col={6} s={12}>
+      </Grid.Item>
+      <Grid.Item col={6} s={12}>
         <SingleSelect
           hint={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Description', defaultMessage: 'Generate a link tag and attribute hreflang=x-default with the URL of your choice.' })}
           label={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Label', defaultMessage: 'Default language URL type' })}
@@ -119,9 +118,9 @@ const Settings = () => {
             {formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Option.Other', defaultMessage: 'Other' })}
           </SingleSelectOption>
         </SingleSelect>
-      </GridItem>
+      </Grid.Item>
       {inputVisible && (
-        <GridItem col={12} s={12}>
+        <Grid.Item col={12} s={12}>
           <TextInput
             placeholder="https://www.strapi.io/language-selector"
             hint={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrl.Description', defaultMessage: 'E.g. URL of your website language selector.' })}
@@ -131,9 +130,9 @@ const Settings = () => {
             value={settings.get('defaultLanguageUrl')}
             onChange={(e) => dispatch(onChangeSettings('defaultLanguageUrl', e.target.value))}
           />
-        </GridItem>
+        </Grid.Item>
       )}
-    </Grid>
+    </Grid.Root>
   );
 };
 

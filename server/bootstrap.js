@@ -4,7 +4,7 @@ const { logMessage, getService } = require('./utils');
 
 module.exports = async () => {
   const sitemap = strapi.plugin('sitemap');
-  const cron = strapi.config.get('plugin.sitemap.cron');
+  const cron = strapi.config.get("plugin::sitemap.cron");
 
   try {
     // Give the public role permissions to access the public API endpoints.
@@ -13,7 +13,7 @@ module.exports = async () => {
         .service('plugin::users-permissions.role')
         .find();
 
-      const publicId = roles.filter((role) => role.type === 'public')[0]?.id;
+      const publicId = roles.filter((role) => role.type === 'public')[0]?.documentId;
 
       if (publicId) {
         const _public = await strapi
@@ -34,7 +34,7 @@ module.exports = async () => {
 
         await strapi
           .service('plugin::users-permissions.role')
-          .updateRole(_public.id, _public);
+          .updateRole(_public.documentId, _public);
       }
     }
 

@@ -235,8 +235,8 @@ const saveSitemap = async (filename, sitemap, isIndex) => {
  */
 const getSitemapStream = async (urlCount) => {
   const config = await getService('settings').getConfig();
-  const LIMIT = strapi.config.get('plugin.sitemap.limit');
-  const enableXsl = strapi.config.get('plugin.sitemap.xsl');
+  const LIMIT = strapi.config.get("plugin::sitemap.limit");
+  const enableXsl = strapi.config.get("plugin::sitemap.xsl");
   const { serverUrl } = getConfigUrls(strapi.config);
 
   const xslObj = {};
@@ -290,8 +290,8 @@ const getSitemapStream = async (urlCount) => {
  */
 const createSitemap = async (cache, invalidationObject) => {
   const config = await getService('settings').getConfig();
-  const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
-  const autoGenerationEnabled = strapi.config.get('plugin.sitemap.autoGenerate');
+  const cachingEnabled = strapi.config.get("plugin::sitemap.caching");
+  const autoGenerationEnabled = strapi.config.get("plugin::sitemap.autoGenerate");
 
   try {
     const {

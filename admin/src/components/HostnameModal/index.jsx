@@ -2,15 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 import {
-  ModalLayout,
-  ModalFooter,
-  ModalBody,
-  ModalHeader,
+  Modal,
   Typography,
   Button,
   TextInput,
   Grid,
-  GridItem,
 } from '@strapi/design-system';
 
 import { isEqual } from 'lodash/fp';
@@ -40,19 +36,19 @@ const ModalForm = (props) => {
   }
 
   return (
-    <ModalLayout
+    <Modal.Content
       onClose={() => onCancel()}
       labelledBy="title"
     >
-      <ModalHeader>
+      <Modal.Header>
         <Typography textColor="neutral800" variant="omega" fontWeight="bold">
           {formatMessage({ id: 'sitemap.HostnameOverrides.Label', defaultMessage: 'Hostname overrides' })}
         </Typography>
-      </ModalHeader>
-      <ModalBody>
-        <Grid gap={4}>
+      </Modal.Header>
+      <Modal.Body>
+        <Grid.Root gap={4}>
           {languages.map((language) => (
-            <GridItem key={language.code} col={6} s={12}>
+            <Grid.Item key={language.code} col={6} s={12}>
               <TextInput
                 placeholder={`https://${language.code}.strapi.io`}
                 label={`${language.name} hostname`}
@@ -69,11 +65,11 @@ const ModalForm = (props) => {
                   setHostnames({ ...hostnames });
                 }}
               />
-            </GridItem>
+            </Grid.Item>
           ))}
-        </Grid>
-      </ModalBody>
-      <ModalFooter
+        </Grid.Root>
+      </Modal.Body>
+      <Modal.Footer
         startActions={(
           <Button onClick={() => onCancel()} variant="tertiary">
             {formatMessage({ id: 'sitemap.Button.Cancel', defaultMessage: 'Cancel' })}
@@ -88,7 +84,7 @@ const ModalForm = (props) => {
           </Button>
         )}
       />
-    </ModalLayout>
+    </Modal.Content>
   );
 };
 

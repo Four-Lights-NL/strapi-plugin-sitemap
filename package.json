@@ -10,16 +10,44 @@
     "required": false,
     "kind": "plugin"
   },
+  "type": "commonjs",
+  "exports": {
+    "./package.json": "./package.json",
+    "./strapi-admin": {
+      "source": "./admin/src/index.js",
+      "import": "./dist/admin/index.mjs",
+      "require": "./dist/admin/index.js",
+      "default": "./dist/admin/index.js"
+    },
+    "./strapi-server": {
+      "source": "./server/index.js",
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
+    },
+    "./cli": {
+      "source": "./cli/index.js",
+      "import": "./dist/cli/index.mjs",
+      "require": "./dist/cli/index.js",
+      "default": "./dist/cli/index.js"
+    }
+  },
+  "files": [
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
   "bin": {
-    "strapi-sitemap": "./bin/strapi-sitemap"
+    "strapi-sitemap": "./dist/cli/index.js"
   },
   "scripts": {
-    "build": "tsc --outDir build && yarn build:copy-files && yarn build:clean",
-    "build:install": "cp package.json build && cp yarn.lock build && cd build && yarn --frozen-lockfile --unsafe-perm --production",
-    "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/ && copyfiles -u 1 bin/**/* build/bin/ && copyfiles LICENSE.md build/ && copyfiles README.md build/",
-    "build:clean": "rimraf build/tsconfig.tsbuildinfo",
-    "develop": "yarn develop:copy-files && tsc -w",
-    "develop:copy-files": "copyfiles -u 1 xsl/**/* playground/src/plugins/sitemap/xsl/",
+    "build": "$npm_execpath build:plugin && $npm_execpath build:copy-files && $npm_execpath build:cli",
+    "build:plugin": "strapi-plugin build",
+    "build:cli": "vite build -c cli/vite.config.ts",
+    "build:copy-files": "copyfiles -u 1 xsl/**/* dist/xsl/",
+    "watch": "strapi-plugin watch",
+    "watch:link": "strap-plugin watch:link",
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx,ts,tsx}'",
     "test:install": "mv yarn.lock tmp-yarn.lock && mv package.json tmp-package.json && yarn add @types/jest typescript jest ts-jest supertest && rm -rf package.json yarn.lock && mv tmp-package.json package.json && mv tmp-yarn.lock yarn.lock",
@@ -31,14 +59,14 @@
     "playground:build": "cd playground && yarn build",
     "playground:start": "cd playground && yarn start",
     "playground:develop": "cd playground && yarn develop",
-    "playground:install-plugin": "cd playground && yarn add strapi-plugin-sitemap@'./../build'"
+    "playground:install-plugin": "cd playground && yarn add strapi-plugin-sitemap@'./../dist'"
   },
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^8.3.0",
     "immutable": "^3.8.2",
     "redux-immutable": "^4.0.0",
-    "redux-thunk": "^2.3.0",
+    "redux-thunk": "^3.1.0",
     "sitemap": "^7.1.0",
     "xml2js": "^0.5.0"
   },
@@ -55,25 +83,37 @@
     }
   ],
   "peerDependencies": {
-    "@strapi/strapi": "^4.0.0"
+    "@strapi/sdk-plugin": "^5.2.8",
+    "@strapi/strapi": "^5.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.1",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
-    "@strapi/design-system": "^1.14.1",
-    "@strapi/helper-plugin": "^4.19.0",
-    "@strapi/icons": "^1.14.1",
-    "@strapi/utils": "^4.19.0",
+    "@strapi/admin": "^5.6.0",
+    "@strapi/content-manager": "^5.6.0",
+    "@strapi/design-system": "^2.0.0-rc.14",
+    "@strapi/icons": "^2.0.0-rc.14",
+    "@strapi/sdk-plugin": "^5.2.8",
+    "@strapi/strapi": "^5.6.0",
+    "@strapi/typescript-utils": "^5.6.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
     "@uncinc/eslint-config": "^1.1.0",
     "copyfiles": "^2.4.1",
     "jest": "^29.5.0",
     "jest-cli": "^29.5.0",
     "jest-styled-components": "^7.1.1",
     "lodash": "^4.17.11",
-    "react": "^17.0.2",
-    "react-intl": "^5.20.12",
-    "react-redux": "^7.2.2",
-    "redux": "^4.0.5",
-    "styled-components": "^5.2.3",
-    "typescript": "^5.1.6"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-intl": "^7.0.4",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^6.27.0",
+    "redux": "^5.0.1",
+    "styled-components": "^6.1.13",
+    "typescript": "^5.7.2"
   },
   "bugs": {
     "url": "https://github.com/pluginpal/strapi-plugin-sitemap/issues"

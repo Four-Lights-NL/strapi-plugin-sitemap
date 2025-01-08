@@ -3,7 +3,7 @@
 const { getService, logMessage } = require('../utils');
 
 const generateSitemapAfterUpdate = async (modelName, queryFilters, object, ids) => {
-  const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
+  const cachingEnabled = strapi.config.get("plugin::sitemap.caching");
 
   if (!cachingEnabled) {
     await getService('core').createSitemap();
@@ -35,7 +35,7 @@ const generateSitemapAfterUpdate = async (modelName, queryFilters, object, ids) 
  */
 
 const subscribeLifecycleMethods = async (modelName) => {
-  const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
+  const cachingEnabled = strapi.config.get("plugin::sitemap.caching");
 
   if (strapi.contentTypes[modelName]) {
     await strapi.db.lifecycles.subscribe({
@@ -91,7 +91,7 @@ module.exports = () => ({
     const settings = await getService('settings').getConfig();
 
     // Loop over configured contentTypes from store.
-    if (settings.contentTypes && strapi.config.get('plugin.sitemap.autoGenerate')) {
+    if (settings.contentTypes && strapi.config.get("plugin::sitemap.autoGenerate")) {
       Object.keys(settings.contentTypes).map(async (contentType) => {
         await subscribeLifecycleMethods(contentType);
       });
@@ -99,7 +99,7 @@ module.exports = () => ({
   },
 
   async loadLifecycleMethod(modelName) {
-    if (strapi.config.get('plugin.sitemap.autoGenerate')) {
+    if (strapi.config.get("plugin::sitemap.autoGenerate")) {
       await subscribeLifecycleMethods(modelName);
     }
   },

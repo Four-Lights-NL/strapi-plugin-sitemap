@@ -5,7 +5,6 @@
  *
  */
 
-import { request } from '@strapi/helper-plugin';
 import { Map } from 'immutable';
 
 import {
@@ -28,12 +27,14 @@ import {
 } from '../../config/constants';
 
 import getTrad from '../../helpers/getTrad';
+import { useFetchClient } from '@strapi/strapi/admin'
 
 // Get initial settings
 export function getSettings(toggleNotification) {
+  const { get } = useFetchClient()
   return async function(dispatch) {
     try {
-      const settings = await request('/sitemap/settings/', { method: 'GET' });
+      const settings = await get('/sitemap/settings/');
       dispatch(getSettingsSucceeded(Map(settings)));
     } catch (err) {
       toggleNotification({ type: 'warning', message: { id: 'notification.error' } });

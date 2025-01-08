@@ -1,5 +1,9 @@
 import React from 'react';
-import { Select, Option, Checkbox, Box } from '@strapi/design-system';
+import {
+  Checkbox,
+  Box,
+  SingleSelect, SingleSelectOption,
+} from '@strapi/design-system'
 import { useIntl } from 'react-intl';
 
 const SelectLanguage = (props) => {
@@ -16,7 +20,7 @@ const SelectLanguage = (props) => {
 
   return (
     <div>
-      <Select
+      <SingleSelect
         name="select"
         label={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Label', defaultMessage: 'Language' })}
         hint={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Description', defaultMessage: 'Select a language.' })}
@@ -25,9 +29,9 @@ const SelectLanguage = (props) => {
         disabled={value === 'und'}
       >
         {Object.entries(contentType.locales).map(([uid, displayName]) => {
-          return <Option value={uid} key={uid}>{displayName}</Option>;
+          return <SingleSelectOption value={uid} key={uid}>{displayName}</SingleSelectOption>;
         })}
-      </Select>
+      </SingleSelect>
       <Box paddingTop={4} paddingBottom={4}>
         <Checkbox
           onValueChange={(cbValue) => {

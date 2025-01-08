@@ -4,7 +4,7 @@ import { Map } from 'immutable';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { useNotification } from '@strapi/helper-plugin';
+import { useNotification } from '@strapi/strapi/admin';
 import { Typography, Box, Button, Link } from '@strapi/design-system';
 
 import { generateSitemap } from '../../state/actions/Sitemap';

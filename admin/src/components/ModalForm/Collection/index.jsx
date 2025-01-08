@@ -5,13 +5,10 @@ import { isEmpty } from 'lodash/fp';
 
 import {
   Grid,
-  GridItem,
-  Select,
-  Option,
   Checkbox,
   Combobox,
-  ComboboxOption,
-} from '@strapi/design-system';
+  ComboboxOption, SingleSelect, SingleSelectOption,
+} from '@strapi/design-system'
 
 import SelectContentTypes from '../../SelectContentTypes';
 
@@ -69,11 +66,11 @@ const CollectionForm = (props) => {
   });
 
   return (
-    <form>
-      <Grid gap={6}>
-        <GridItem col={6} s={12}>
-          <Grid gap={4}>
-            <GridItem col={12}>
+    (<form>
+      <Grid.Root gap={6}>
+        <Grid.Item col={6} s={12}>
+          <Grid.Root gap={4}>
+            <Grid.Item col={12}>
               <SelectContentTypes
                 contentTypes={contentTypes}
                 onChange={(value) => handleSelectChange(value)}
@@ -81,19 +78,19 @@ const CollectionForm = (props) => {
                 disabled={!isEmpty(id)}
                 modifiedContentTypes={modifiedState}
               />
-            </GridItem>
-            <GridItem col={12}>
+            </Grid.Item>
+            <Grid.Item col={12}>
               <SelectLanguage
                 contentType={contentTypes[uid]}
                 onChange={(value) => handleSelectChange(uid, value)}
                 value={langcode}
               />
-            </GridItem>
-          </Grid>
-        </GridItem>
-        <GridItem col={6} s={12}>
-          <Grid gap={4}>
-            <GridItem col={12}>
+            </Grid.Item>
+          </Grid.Root>
+        </Grid.Item>
+        <Grid.Item col={6} s={12}>
+          <Grid.Root gap={4}>
+            <Grid.Item col={12}>
               <Combobox
                 autocomplete="both"
                 placeholder="/en/pages/[id]"
@@ -137,10 +134,10 @@ const CollectionForm = (props) => {
                   </ComboboxOption>
                 ))}
               </Combobox>
-            </GridItem>
+            </Grid.Item>
             {Object.keys(form).map((input) => (
-              <GridItem col={12} key={input}>
-                <Select
+              <Grid.Item col={12} key={input}>
+                <SingleSelect
                   name={input}
                   label={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Label`, defaultMessage: input.replace(/^\w/, (c) => c.toUpperCase()) })}
                   hint={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Description`, defaultMessage: '' })}
@@ -149,12 +146,12 @@ const CollectionForm = (props) => {
                   value={modifiedState.getIn([uid, 'languages', langcode, input], form[input].value)}
                 >
                   {form[input].options.map((option) => (
-                    <Option value={option} key={option}>{option}</Option>
+                    <SingleSelectOption value={option} key={option}>{option}</SingleSelectOption>
                   ))}
-                </Select>
-              </GridItem>
+                </SingleSelect>
+              </Grid.Item>
             ))}
-            <GridItem col={12}>
+            <Grid.Item col={12}>
               <Checkbox
                 onValueChange={(cbValue) => {
                   onChange(uid, langcode, 'includeLastmod', cbValue);
@@ -165,11 +162,11 @@ const CollectionForm = (props) => {
               >
                 {formatMessage({ id: 'sitemap.Settings.Field.IncludeLastmod.Label', defaultMessage: 'Lastmod' })}
               </Checkbox>
-            </GridItem>
-          </Grid>
-        </GridItem>
-      </Grid>
-    </form>
+            </Grid.Item>
+          </Grid.Root>
+        </Grid.Item>
+      </Grid.Root>
+    </form>)
   );
 };
 

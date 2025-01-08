@@ -7,8 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { useNotification } from '@strapi/helper-plugin';
+import { useNotification } from '@strapi/strapi/admin';
 
 import Tabs from '../../components/Tabs';
 import Header from '../../components/Header';

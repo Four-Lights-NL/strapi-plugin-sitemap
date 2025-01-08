@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Map } from 'immutable';
 import { useIntl } from 'react-intl';
 
-import { useNotification } from '@strapi/helper-plugin';
-import { Box, Button, HeaderLayout } from '@strapi/design-system';
+import { Box, Button } from '@strapi/design-system';
 import { Check } from '@strapi/icons';
+import { useNotification, Layouts } from '@strapi/strapi/admin';
 
 import { discardAllChanges, submit } from '../../state/actions/Sitemap';
 
@@ -31,7 +31,7 @@ const Header = () => {
 
   return (
     <Box background="neutral100">
-      <HeaderLayout
+      <Layouts.Header
         primaryAction={(
           <Box style={{ display: 'flex' }}>
             <Button

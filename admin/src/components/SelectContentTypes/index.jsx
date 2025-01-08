@@ -1,5 +1,8 @@
 import React from 'react';
-import { Select, Option } from '@strapi/design-system';
+import {
+  SingleSelectOption,
+  SingleSelect,
+} from '@strapi/design-system'
 import { useIntl } from 'react-intl';
 
 const SelectContentTypes = (props) => {
@@ -13,7 +16,7 @@ const SelectContentTypes = (props) => {
   } = props;
 
   return (
-    <Select
+    <SingleSelect
       name="select"
       label={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Label', defaultMessage: 'Content Type' })}
       hint={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Description', defaultMessage: 'Select a content type.' })}
@@ -23,9 +26,9 @@ const SelectContentTypes = (props) => {
       required
     >
       {Object.entries(contentTypes).map(([uid, { displayName }]) => {
-        return <Option value={uid} key={uid}>{displayName}</Option>;
+        return <SingleSelectOption value={uid} key={uid}>{displayName}</SingleSelectOption>;
       })}
-    </Select>
+    </SingleSelect>
   );
 };
 

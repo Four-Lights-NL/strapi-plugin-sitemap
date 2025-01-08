@@ -1,36 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
-import { request, InjectionZone } from '@strapi/helper-plugin';
+import { useFetchClient } from '@strapi/strapi/admin';
 
 import { useSelector } from 'react-redux';
 
 import {
-  ModalLayout,
-  ModalFooter,
-  ModalBody,
-  ModalHeader,
+  Modal,
   Button,
   Typography,
-  TabGroup,
   Tabs,
-  Tab,
-  TabPanels,
-  TabPanel,
   Box,
-  Flex,
   Divider,
 } from '@strapi/design-system';
 
 import CustomForm from './Custom';
 import CollectionForm from './Collection';
 import pluginId from '../../helpers/pluginId';
+import InjectionZone from '../InjectionZone'
 
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
   const [langcode, setLangcode] = useState('und');
   const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
   const { formatMessage } = useIntl();
+  const { post } = useFetchClient();
 
   const hasPro = useSelector((state) => state.getIn(['sitemap', 'info', 'hasPro'], false));
 
@@ -67,15 +61,12 @@ const ModalForm = (props) => {
 
   const submitForm = async (e) => {
     if (type === 'collection') {
-      const response = await request('/sitemap/pattern/validate-pattern', {
-        method: 'POST',
-        body: {
-          pattern: modifiedState.getIn([uid, 'languages', langcode, 'pattern'], null),
-          modelName: uid,
-        },
+      const { data: response } = await post('/sitemap/pattern/validate-pattern', {
+        pattern: modifiedState.getIn([uid, 'languages', langcode, 'pattern'], null),
+        modelName: uid,
       });
 
-      if (!response.valid) {
+      if (!response.valid === 200) {
         setPatternInvalid({ invalid: true, message: response.message });
       } else onSubmit(e);
     } else onSubmit(e);
@@ -93,43 +84,41 @@ const ModalForm = (props) => {
   };
 
   return (
-    <ModalLayout
+    <Modal.Content
       onClose={() => onCancel()}
       labelledBy="title"
     >
-      <ModalHeader>
+      <Modal.Header>
         <Typography textColor="neutral800" variant="omega" fontWeight="bold">
           {formatMessage({ id: 'sitemap.Modal.HeaderTitle', defaultMessage: 'Sitemap entries' })} - {type}
         </Typography>
-      </ModalHeader>
-      <ModalBody>
-        <TabGroup label="Settings" id="tabs" variant="simple">
-          {hasPro && (
-            <Box marginBottom="4">
-              <Flex>
-                <Tabs style={{ marginLeft: 'auto' }}>
-                  <Tab>{formatMessage({ id: 'sitemap.Modal.Tabs.Basic.Title', defaultMessage: 'Basic settings' })}</Tab>
-                  <Tab>{formatMessage({ id: 'sitemap.Modal.Tabs.Advanced.Title', defaultMessage: 'Advanced settings' })}</Tab>
-                </Tabs>
-              </Flex>
-
+      </Modal.Header>
+      <Modal.Body>
+        <Tabs.Root defaultValue="basic" id="tabs" variant="simple">
+          { hasPro ?
+            <>
+              <Tabs.List aria-label="Settings">
+                <Tabs.Trigger value="basic">{formatMessage({ id: 'sitemap.Modal.Tabs.Basic.Title', defaultMessage: 'Basic settings' })}</Tabs.Trigger>
+                <Tabs.Trigger value="advanced">{formatMessage({ id: 'sitemap.Modal.Tabs.Advanced.Title', defaultMessage: 'Advanced settings' })}</Tabs.Trigger>
+              </Tabs.List>
               <Divider />
-            </Box>
-          )}
-
-          <TabPanels>
-            <TabPanel>
+            </>
+          : null }
+          <Tabs.Content value="basic">
+            <Box marginTop={4}>
               {form()}
-            </TabPanel>
-            <TabPanel>
+            </Box>
+          </Tabs.Content>
+          <Tabs.Content value="advanced">
+            <Box marginTop={4}>
               <InjectionZone
                 area={`${pluginId}.modal.advanced`}
               />
-            </TabPanel>
-          </TabPanels>
-        </TabGroup>
-      </ModalBody>
-      <ModalFooter
+            </Box>
+          </Tabs.Content>
+        </Tabs.Root>
+      </Modal.Body>
+      <Modal.Footer
         startActions={(
           <Button onClick={() => onCancel()} variant="tertiary">
             {formatMessage({ id: 'sitemap.Button.Cancel', defaultMessage: 'Cancel' })}
@@ -144,7 +133,7 @@ const ModalForm = (props) => {
           </Button>
         )}
       />
-    </ModalLayout>
+    </Modal.Content>
   );
 };
 
