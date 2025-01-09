@@ -31,7 +31,7 @@ module.exports = {
     const contentTypes = {};
 
     await Promise.all(Object.values(strapi.contentTypes).reverse().map(async (contentType) => {
-      if (strapi.config.get('plugin.sitemap.excludedTypes').includes(contentType.uid)) return;
+      if (strapi.config.get("plugin::sitemap.excludedTypes").includes(contentType.uid)) return;
       contentTypes[contentType.uid] = {
         displayName: contentType.globalId,
       };
@@ -94,6 +94,7 @@ module.exports = {
   },
 
   getSitemapXsl: async (ctx) => {
+    console.log(path.resolve(__dirname, '../../xsl/sitemap.xsl'))
     const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sitemap.xsl'), 'utf8');
     ctx.response.set('content-type', 'application/xml');
     ctx.body = xsl;

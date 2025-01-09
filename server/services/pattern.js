@@ -16,7 +16,7 @@ const { logMessage } = require('../utils');
  */
 const getAllowedFields = (contentType, allowedFields = []) => {
   const fields = [];
-  const fieldTypes = allowedFields.length > 0 ? allowedFields : strapi.config.get('plugin.sitemap.allowedFields');
+  const fieldTypes = allowedFields.length > 0 ? allowedFields : strapi.config.get("plugin::sitemap.allowedFields");
   fieldTypes.map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
       if ((field.type === fieldType || fieldName === fieldType) && field.type !== 'relation') {
@@ -131,7 +131,7 @@ const resolvePattern = async (pattern, entity) => {
 
     if (!relationalField) {
       const replacement = entity[field] || '';
-      if (strapi.config.get('plugin.sitemap.discardInvalidRelations') && !replacement) {
+      if (strapi.config.get("plugin::sitemap.discardInvalidRelations") && !replacement) {
         errorInPattern = true;
         return;
       }
@@ -140,7 +140,7 @@ const resolvePattern = async (pattern, entity) => {
       strapi.log.error(logMessage('Something went wrong whilst resolving the pattern.'));
     } else if (typeof entity[relationalField[0]] === 'object') {
       const replacement = entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '';
-      if (strapi.config.get('plugin.sitemap.discardInvalidRelations') && !replacement) {
+      if (strapi.config.get("plugin::sitemap.discardInvalidRelations") && !replacement) {
         errorInPattern = true;
         return;
       }

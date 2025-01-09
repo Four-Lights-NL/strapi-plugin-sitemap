@@ -1,8 +1,8 @@
-import { prefixPluginTranslations } from '@strapi/helper-plugin';
-import pluginPkg from '../../package.json';
-import pluginId from './helpers/pluginId';
-import CMEditViewExclude from './components/CMEditViewExclude';
-import pluginPermissions from './permissions';
+import pluginPkg from '../../package.json'
+import pluginId from './helpers/pluginId'
+import CMEditViewExclude from './components/CMEditViewExclude'
+import pluginPermissions from './permissions'
+import prefixPluginTranslations from './helpers/prefixPluginTranslations'
 // import getTrad from './helpers/getTrad';
 
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
@@ -52,30 +52,26 @@ export default {
     );
   },
   bootstrap(app) {
-    app.injectContentManagerComponent('editView', 'informations', {
+    app.getPlugin('content-manager').injectComponent('editView', 'informations', {
       name: 'sitemap-exclude-filter-edit-view',
       Component: CMEditViewExclude,
     });
   },
   async registerTrads({ locales }) {
-    const importedTrads = await Promise.all(
-      locales.map(async (locale) => {
-        try {
-          // eslint-disable-next-line import/no-dynamic-require, global-require
-          const data = require(`./translations/${locale}.json`);
-          return {
-            data: prefixPluginTranslations(data, pluginId),
-            locale,
-          };
-        } catch {
+    return await Promise.all(locales.map((locale) => {
+        return import(`./translations/${locale}.json`).then(
+          ({ default: data }) => {
+            return {
+              data: prefixPluginTranslations(data, pluginId),
+              locale,
+            };
+          }).catch(() => {
           return {
             data: {},
             locale,
           };
-        }
-      }),
+        });
+      })
     );
-
-    return Promise.resolve(importedTrads);
-  },
+  }
 };

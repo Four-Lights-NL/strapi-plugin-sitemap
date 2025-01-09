@@ -7,7 +7,7 @@ module.exports = {
     xsl: true,
     autoGenerate: false,
     caching: true,
-    allowedFields: ['id', 'uid'],
+    allowedFields: ['documentId', 'uid'],
     discardInvalidRelations: false,
     excludedTypes: [
       'admin::permission',

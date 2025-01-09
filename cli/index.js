@@ -27,12 +27,12 @@ const getStrapiApp = async () => {
 
     const distDir = isTSProject ? outDir : appDir;
 
-    const app = await strapi({ appDir, distDir }).load();
+    const app = await strapi.createStrapi({ appDir, distDir }).load();
 
     return app;
   } catch (e) {
     // Fallback for pre Strapi 4.2.
-    const app = await strapi().load();
+    const app = await strapi.createStrapi().load();
     return app;
   }
 };

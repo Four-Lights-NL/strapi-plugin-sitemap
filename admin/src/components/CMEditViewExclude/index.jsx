@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { useCMEditViewDataManager, request } from '@strapi/helper-plugin';
-import { Box, Divider, Typography, Stack, Checkbox } from '@strapi/design-system';
+import { Box, Divider, Typography, Flex, Checkbox } from '@strapi/design-system';
+import { useFetchClient, unstable_useContentManagerContext as useContentManagerContext } from '@strapi/strapi/admin';
 
 import getTrad from '../../helpers/getTrad';
 
 const CMEditViewExclude = () => {
   const [sitemapSettings, setSitemapSettings] = useState({});
   const { formatMessage } = useIntl();
-  const { slug, modifiedData, onChange } = useCMEditViewDataManager();
+  const { slug, form } = useContentManagerContext;
+  const { values: modifiedData, onChange } = form
+  const { get } = useFetchClient();
 
   const getSitemapSettings = async () => {
-    const settings = await request('/sitemap/settings/', { method: 'GET' });
+    const settings = await get('/sitemap/settings/');
     setSitemapSettings(settings);
   };
 
@@ -31,7 +33,7 @@ const CMEditViewExclude = () => {
       <Box paddingTop={2} paddingBottom={6}>
         <Divider />
       </Box>
-      <Stack size={2}>
+      <Flex direction="column" gap={2}>
         <Box>
           <Checkbox
             onValueChange={(value) => {
@@ -43,7 +45,7 @@ const CMEditViewExclude = () => {
             {formatMessage({ id: getTrad('EditView.ExcludeFromSitemap'), defaultMessage: 'Exclude from sitemap' })}
           </Checkbox>
         </Box>
-      </Stack>
+      </Flex>
     </Box>
   );
 };

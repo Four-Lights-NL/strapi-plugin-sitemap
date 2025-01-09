@@ -11,15 +11,15 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "@strapi/plugin-i18n": "4.19.0",
-    "@strapi/plugin-users-permissions": "4.24.2",
-    "@strapi/strapi": "4.19.0",
-    "better-sqlite3": "8.5",
-    "pg": "^8.10.0",
+    "@strapi/plugin-users-permissions": "5.6.0",
+    "@strapi/strapi": "5.6.0",
+    "better-sqlite3": "11.7.2",
+    "strapi-plugin-sitemap": "link:..",
+    "pg": "^8.13.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-router-dom": "^5.2.0",
-    "styled-components": "^5.2.1"
+    "react-router-dom": "^6.0.0",
+    "styled-components": "^6.0.0"
   },
   "author": {
     "name": "A Strapi developer"
