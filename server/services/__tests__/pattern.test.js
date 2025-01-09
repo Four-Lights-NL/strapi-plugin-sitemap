@@ -41,10 +41,8 @@ global.strapi = {
     },
   },
   config: {
-    plugin: {
-      sitemap: {
-        discardInvalidRelations: false
-      }
+    "plugin::sitemap": {
+      discardInvalidRelations: false
     },
     get: ((key) => get(global.strapi.config, key)),
   }
@@ -178,14 +176,14 @@ describe('Pattern service', () => {
         title: "my-page-title",
       };
 
-      global.strapi.config.plugin.sitemap.discardInvalidRelations = true;
+      global.strapi.config["plugin::sitemap"].discardInvalidRelations = true;
 
       const result = await patternService().resolvePattern(pattern, entity);
 
       expect(result).toBe(null);
 
-      // Restore 
-      global.strapi.config.plugin.sitemap.discardInvalidRelations = false;
+      // Restore
+      global.strapi.config["plugin::sitemap"].discardInvalidRelations = false;
     });
   });
   describe('Validate pattern', () => {
