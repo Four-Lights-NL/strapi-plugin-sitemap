@@ -58,8 +58,7 @@
     "playground:install": "cd playground && yarn install",
     "playground:build": "cd playground && yarn build",
     "playground:start": "cd playground && yarn start",
-    "playground:develop": "cd playground && yarn develop",
-    "playground:install-plugin": "cd playground && yarn add strapi-plugin-sitemap@'./../dist'"
+    "playground:develop": "cd playground && yarn develop"
   },
   "dependencies": {
     "chalk": "^4.1.2",

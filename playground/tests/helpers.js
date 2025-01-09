@@ -1,6 +1,7 @@
 const Strapi = require("@strapi/strapi");
 const fs = require("fs");
 const _ = require("lodash");
+const path = require("path");
 
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -37,18 +38,42 @@ const waitForServer = () =>
   });
 
 /**
- * Setups strapi for futher testing
+ * Strips the last directory if it's named 'playground'
+ * @param {string} pathStr - Path to process
+ * @returns {string} Path with playground stripped if it was the last dir
+ */
+function stripPlayground(pathStr) {
+  const parsed = path.parse(pathStr);
+  const dirs = parsed.dir.split(path.sep);
+
+  // Check if last directory is 'playground'
+  if (dirs[dirs.length - 1] === 'playground') {
+    dirs.pop(); // Remove it
+  }
+
+  // Reconstruct path preserving the original file/extension
+  return path.format({
+    dir: dirs.join(path.sep),
+    base: parsed.base
+  });
+}
+
+/**
+ * Setups strapi for further testing
  */
 async function setupStrapi() {
   if (!instance) {
-    /** the follwing code in copied from `./node_modules/strapi/lib/Strapi.js` */
-    await Strapi({
-      appDir: './playground',
-      distDir: './playground/dist'
-    }).load();
-    await waitForServer();
+    const pluginPath = stripPlayground(process.cwd())
+    const playgroundPath = path.resolve(pluginPath, './playground');
 
-    instance = strapi; // strapi is global now
+    const options = {
+      appDir: playgroundPath,
+      distDir: path.resolve(playgroundPath, 'dist')
+    }
+
+    await Strapi.compileStrapi(options)
+    instance = await Strapi.createStrapi(options).load()
+    instance.server.mount()
   }
   return instance;
 }
@@ -58,12 +83,17 @@ async function setupStrapi() {
  */
 async function stopStrapi() {
   if (instance) {
-
-    instance.destroy();
-
     const tmpDbFile = strapi.config.get(
       "database.connection.connection.filename"
     );
+
+    instance.server.httpServer.close()
+
+    if (instance.db?.connection) {
+      await instance.db.connection.destroy();
+    }
+
+    await instance.destroy();
 
     if (fs.existsSync(tmpDbFile)) {
       fs.unlinkSync(tmpDbFile);
